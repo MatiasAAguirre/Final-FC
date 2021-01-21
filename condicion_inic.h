@@ -9,7 +9,6 @@ int condicion_inic(int *ani, int l, int k, float rho, int n_ref) {
   int i, j;
   float r;
 
-  srand(time(NULL));
 
   //Asigno el valor según su posición a todos los elementos de la red.
   for (i=k; i<l+k;i++) {
@@ -34,6 +33,8 @@ int condicion_inic(int *ani, int l, int k, float rho, int n_ref) {
     *(ani+i) = *(ani+l+i); //Toma los valores del final.
     *(ani+l+k+i) = *(ani+k+i); //Toma los valores del principio.
   }
+
+  printf("El paciente infectado es el %d.\n", j-1);
 
   return j;
 }

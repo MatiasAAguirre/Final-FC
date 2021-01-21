@@ -8,7 +8,6 @@
 #include "relink.h"
 #include "imprimir_tira.h"
 #include "imprimir_matriz.h"
-#include "ver_repe.h"
 
 int main(int argc,char*argv[]) {
   int *pac, *cont, *hist_t_inf;
@@ -40,16 +39,20 @@ int main(int argc,char*argv[]) {
 
     network(pac,cont,l,k); //Arma la matriz de contactos.
 
-    //imprimir_tira(pac,(l+2*k));
-    //printf("\n");
-    //imprimir_matriz(cont,l,2*k);
-    //printf("\n");
+    imprimir_tira(pac,(l+2*k));
+    printf("\n");
+    imprimir_matriz(cont,l,2*k);
+    printf("\n");
     /*ver_repe(cont,l,k);*/
 
     relink(pac,cont,l,k,p); //Redireccionamiento de la mitad (derecha) de los contactos.
 
+    imprimir_matriz(cont,l,2*k);
+    printf("\n");
     //imprimir_matriz(cont,l,2*k);
 
+
+//----------------------------------------------------------------------------------
     //Evolución de los contagios.
     while (cant_inf > 0) {
       printf("Día %f\n", t);
@@ -64,14 +67,15 @@ int main(int argc,char*argv[]) {
           *(pac+l+k+i) = *(pac+k+i); //Toma los valores del principio.
         }
         cant_inf = cant_inf - 1; //Elimina un infectado.
+        printf("Hay %d pacientes infectados.\n", cant_inf);
         n_ref = n_ref + 1;
       }
       else {
         r = (rand()%(2*k)); //Elijo un valor random entre [0,2*k].
-        if (*(pac+(*(cont+(inf-k)*2*k+r))) == 0) {
-          *(pac+(*(cont+(inf-k)*2*k+r))) = -1; //Contagio de algún contacto del paciente inf.
-          printf("Infecto a %d\n", *(cont+(inf-k)*2*k+r));
-          *(hist_t_inf+(*(cont+(inf-k)*2*k+r))-k) = t; //Guardo el tiempo de contagio del sujeto.
+        if (*(pac+(*(cont+(inf-k)*2*k+r)+1)) == 0) {
+          *(pac+(*(cont+(inf-k)*2*k+r)+1)) = -1; //Contagio de algún contacto del paciente inf.
+          printf("Infecto a %d\n", (*(cont+(inf-k)*2*k+r)+1));
+          *(hist_t_inf+(*(cont+(inf-k)*2*k+r)+1)-k) = t; //Guardo el tiempo de contagio del sujeto.
           cant_inf = cant_inf + 1; //Agrego un infectado.
         }
         else {
@@ -90,11 +94,7 @@ int main(int argc,char*argv[]) {
         inf = k + (rand()%l);
       }
     }
-
-    //printf("Al finalizar tengo: %d refractarios.\n", n_ref);
-    //imprimir_tira(pac,(l+2*k));
-
-
+//--------------------------------------------------------------------------
   }
 
   free(pac);
