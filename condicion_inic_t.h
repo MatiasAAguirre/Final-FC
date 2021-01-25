@@ -52,7 +52,7 @@ int condicion_inic_t(int *ani, int *vec, int l, int k, float rho, float p, int n
     *(ani+l+k+i) = *(ani+k+i); //Toma los valores del principio.
   }
 
-  printf("El paciente infectado es el %d.\n", j-1);
+  //printf("El paciente infectado es el %d.\n", j-1);
 
   free(index_pac);
 

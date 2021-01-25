@@ -9,7 +9,7 @@
 #include "imprimir_tira.h"
 #include "imprimir_matriz.h"
 
-int Final_FC2(int l, int k, float p, float rho) {
+int Random_inmu2(int l, int k, float p, float rho) {
   int *pac, *cont, *hist_t_inf;
   int i, Te, r, inf, cant_inf, t_inf, n_ref;
   float t;
@@ -43,11 +43,15 @@ int Final_FC2(int l, int k, float p, float rho) {
     relink(pac,cont,l,k,p); //Redireccionamiento de la mitad (derecha) de los contactos.
 
     //imprimir_matriz(cont,l,2*k);
+    //printf("\n");
+    //imprimir_matriz(cont,l,2*k);
 
+
+//----------------------------------------------------------------------------------
     //Evolución de los contagios.
     while (cant_inf > 0) {
-      //printf("Día %d\n", t);
-      //rintf("Miro el paciente infectado %d\n", inf);
+      //printf("Día %f\n", t);
+      //printf("Miro el paciente infectado %d\n", inf);
       t_inf = *(hist_t_inf+inf-k); //Tomo el tiempo de infección del paciente inf.
 
       if (t-t_inf>Te) {
@@ -58,19 +62,20 @@ int Final_FC2(int l, int k, float p, float rho) {
           *(pac+l+k+i) = *(pac+k+i); //Toma los valores del principio.
         }
         cant_inf = cant_inf - 1; //Elimina un infectado.
+        //printf("Hay %d pacientes infectados.\n", cant_inf);
         n_ref = n_ref + 1;
       }
       else {
         r = (rand()%(2*k)); //Elijo un valor random entre [0,2*k].
-        if (*(pac+(*(cont+(inf-k)*2*k+r))) == 0) {
-          //printf("Infecto a %d\n", *(cont+(inf-k)*2*k+r));
-          *(pac+(*(cont+(inf-k)*2*k+r))) = -1; //Contagio de algún contacto del paciente inf.
-          *(hist_t_inf+(*(cont+(inf-k)*2*k+r))-k) = t; //Guardo el tiempo de contagio del sujeto.
+        if (*(pac+(*(cont+(inf-k)*2*k+r)+1)) == 0) {
+          *(pac+(*(cont+(inf-k)*2*k+r)+1)) = -1; //Contagio de algún contacto del paciente inf.
+          //printf("Infecto a %d\n", (*(cont+(inf-k)*2*k+r)+1));
+          *(hist_t_inf+(*(cont+(inf-k)*2*k+r)+1)-k) = t; //Guardo el tiempo de contagio del sujeto.
           cant_inf = cant_inf + 1; //Agrego un infectado.
         }
-        //else {
-        //  printf("Volvió a tener contacto con %d\n", *(cont+(inf-k)*2*k+r));
-        //}
+        else {
+          //printf("Volvió a tener contacto con %d\n", *(cont+(inf-k)*2*k+r));
+        }
         for (i=0;i<k;i++) { //Mantiene la periodicidad.
           *(pac+i) = *(pac+l+i); //Toma los valores del final.
           *(pac+l+k+i) = *(pac+k+i); //Toma los valores del principio.
@@ -78,18 +83,13 @@ int Final_FC2(int l, int k, float p, float rho) {
       }
       //cant_inf = contar_inf(); Cuento la nueva cantidad de pacientes.
       t = t + (float)1/(float)cant_inf;
-      inf = k + (rand()%l); //Toma un individuo al azar dentro del anillo.
+      inf = k + (rand()%l);
 
-      while (*(pac+inf) >= 0 && cant_inf>0) { //Se asegura que el individuo elegido al azar esté infectado.
-        inf = k + (rand()%l); //Toma un individuo al azar dentro del anillo.
+      while (*(pac+inf) >= 0 && cant_inf>0) {
+        inf = k + (rand()%l);
       }
     }
-
-    //printf("Al finalizar tengo: %d refractarios.\n", n_ref);
-    //imprimir_tira(pac,(l+2*k));
-    //printf("Pasaron %d dias.\n", t);
-
-
+//--------------------------------------------------------------------------
   }
 
   free(pac);

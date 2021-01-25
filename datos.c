@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "Final_FC2.c"
+#include "Random_inmu2.c"
 
 //Calculo los promedios de N=10000 con K=2 para 10000 pasadas por cada uno de los pares (rho,p).
 
@@ -28,18 +28,20 @@ int main(int argc, char const *argv[]) {
 
     for (j=0; j<21; j++) { //Uno por cada p.
       r = 0;
-      p = 0.01+j*0.0495;
-      for (k=0; k<1000; k++) { //Promedio entre 10000 corridas.
-        r = r + Final_FC2(10000,2,p,*(rho+i));
+      p = exp(-4.6+0.23*j);
+      //p = 0.01+j*0.0495;
+      for (k=0; k<10000; k++) { //Promedio entre 10000 corridas.
+        r = r + Random_inmu2(5000,2,p,*(rho+i));
         //printf("%d\n", r);
         printf("k=%d de j=%d de i=%d.\r", k, j, i);
       }
-      fprintf(fp, "%f %f\n", p, ((float)r/((1-*(rho+i))*10000*1000)));
+      fprintf(fp, "%f %f\n", p, ((float)r/((1-*(rho+i))*10000*5000)));
     }
     fclose(fp);
   }
 
   free(rho);
+  free(fps);
 
   return 0;
 }

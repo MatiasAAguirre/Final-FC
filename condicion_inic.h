@@ -34,7 +34,7 @@ int condicion_inic(int *ani, int l, int k, float rho, int n_ref) {
     *(ani+l+k+i) = *(ani+k+i); //Toma los valores del principio.
   }
 
-  printf("El paciente infectado es el %d.\n", j-1);
+  //printf("El paciente infectado es el %d.\n", j-1);
 
   return j;
 }
